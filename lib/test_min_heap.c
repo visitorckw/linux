@@ -67,9 +67,8 @@ static __init int test_heapify_all(bool min_heap)
 			 -3, -1, -2, -4, 0x8000000, 0x7FFFFFF };
 	struct min_heap_test heap;
 
-	heap.heap.data = values;
+	min_heap_init(&heap, values, ARRAY_SIZE(values));
 	heap.heap.nr = ARRAY_SIZE(values);
-	heap.heap.size =  ARRAY_SIZE(values);
 	struct min_heap_callbacks funcs = {
 		.less = min_heap ? less_than : greater_than,
 		.swp = swap_ints,
@@ -99,9 +98,7 @@ static __init int test_heap_push(bool min_heap)
 	int values[ARRAY_SIZE(data)];
 	struct min_heap_test heap;
 
-	heap.heap.data = values;
-	heap.heap.nr = 0;
-	heap.heap.size =  ARRAY_SIZE(values);
+	min_heap_init(&heap, values, ARRAY_SIZE(values));
 	struct min_heap_callbacks funcs = {
 		.less = min_heap ? less_than : greater_than,
 		.swp = swap_ints,
@@ -131,9 +128,7 @@ static __init int test_heap_pop_push(bool min_heap)
 	int values[ARRAY_SIZE(data)];
 	struct min_heap_test heap;
 
-	heap.heap.data = values;
-	heap.heap.nr = 0;
-	heap.heap.size =  ARRAY_SIZE(values);
+	min_heap_init(&heap, values, ARRAY_SIZE(values));
 	struct min_heap_callbacks funcs = {
 		.less = min_heap ? less_than : greater_than,
 		.swp = swap_ints,
