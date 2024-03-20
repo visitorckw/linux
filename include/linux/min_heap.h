@@ -78,7 +78,7 @@ bool __min_heap_full(struct __min_heap *heap)
 
 /* Sift the element at pos down the heap. */
 static __always_inline
-void __min_heapify(struct __min_heap *heap, int pos, size_t elem_size,
+void __min_heap_sift_down(struct __min_heap *heap, int pos, size_t elem_size,
 		const struct min_heap_callbacks *func, void *args)
 {
 	void *left, *right;
@@ -111,8 +111,8 @@ void __min_heapify(struct __min_heap *heap, int pos, size_t elem_size,
 	}
 }
 
-#define min_heapify(_heap, _pos, _func, _args)	\
-	__min_heapify(&(_heap)->heap, _pos, __minheap_obj_size(_heap), _func, _args)
+#define min_heap_sift_down(_heap, _pos, _func, _args)	\
+	__min_heap_sift_down(&(_heap)->heap, _pos, __minheap_obj_size(_heap), _func, _args)
 
 /* Floyd's approach to heapification that is O(nr). */
 static __always_inline
@@ -122,7 +122,7 @@ void __min_heapify_all(struct __min_heap *heap, size_t elem_size,
 	int i;
 
 	for (i = heap->nr / 2 - 1; i >= 0; i--)
-		__min_heapify(heap, i, elem_size, func, args);
+		__min_heap_sift_down(heap, i, elem_size, func, args);
 }
 
 #define min_heapify_all(_heap, _func, _args)	\
@@ -141,7 +141,7 @@ bool __min_heap_pop(struct __min_heap *heap, size_t elem_size,
 	/* Place last element at the root (position 0) and then sift down. */
 	heap->nr--;
 	memcpy(data, data + (heap->nr * elem_size), elem_size);
-	__min_heapify(heap, 0, elem_size, func, args);
+	__min_heap_sift_down(heap, 0, elem_size, func, args);
 
 	return true;
 }
@@ -161,7 +161,7 @@ void __min_heap_pop_push(struct __min_heap *heap,
 		void *args)
 {
 	memcpy(heap->data, element, elem_size);
-	__min_heapify(heap, 0, elem_size, func, args);
+	__min_heap_sift_down(heap, 0, elem_size, func, args);
 }
 
 #define min_heap_pop_push(_heap, _element, _func, _args)	\
@@ -235,7 +235,7 @@ bool __min_heap_del(struct __min_heap *heap, size_t elem_size, size_t idx,
 		return true;
 	memcpy(data, data + (heap->nr * elem_size), elem_size);
 	__min_heap_sift_up(heap, elem_size, idx, func, args);
-	__min_heapify(heap, idx, elem_size, func, args);
+	__min_heap_sift_down(heap, idx, elem_size, func, args);
 
 	return true;
 }
