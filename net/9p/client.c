@@ -1699,7 +1699,7 @@ p9_client_write_subreq(struct netfs_io_subrequest *subreq)
 	}
 
 	if (written > len) {
-		pr_err("bogus RWRITE count (%d > %lu)\n", written, len);
+		pr_err("bogus RWRITE count (%d > %zu)\n", written, len);
 		written = len;
 	}
 

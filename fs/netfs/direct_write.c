@@ -37,7 +37,7 @@ static ssize_t netfs_unbuffered_write_iter_locked(struct kiocb *iocb, struct iov
 	size_t len = iov_iter_count(iter);
 	bool async = !is_sync_kiocb(iocb);
 
-	_enter("%lx", iov_iter_count(iter));
+	_enter("%zx", iov_iter_count(iter));
 
 	/* We're going to need a bounce buffer if what we transmit is going to
 	 * be different in some way to the source buffer, e.g. because it gets
