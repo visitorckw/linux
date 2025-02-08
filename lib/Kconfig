@@ -758,3 +758,6 @@ config UNION_FIND
 
 config MIN_HEAP
 	bool
+
+config KTH_ELEMENT
+	bool
