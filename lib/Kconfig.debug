@@ -2243,6 +2243,18 @@ config LKDTM
 	Documentation on how to use the module can be found in
 	Documentation/fault-injection/provoke-crashes.rst
 
+config TEST_KTH_ELEMENT
+	tristate "kth_element test" if !KUNIT_ALL_TESTS
+	depends on KUNIT
+	default KUNIT_ALL_TESTS
+	select KTH_ELEMENT
+	help
+	  Enable this to turn on 'kth_element()' function test. This test is
+	  executed only once during system boot (so affects only boot time),
+	  or at module load time.
+
+	  If unsure, say N.
+
 config CPUMASK_KUNIT_TEST
 	tristate "KUnit test for cpumask" if !KUNIT_ALL_TESTS
 	depends on KUNIT
