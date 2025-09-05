@@ -308,7 +308,7 @@ void __min_heap_sift_up_inline(min_heap_char *heap, size_t elem_size, size_t idx
 
 	while (a) {
 		b = parent(a, lsbit, elem_size);
-		if (func->less(data + b, data + a, args))
+		if (!func->less(data + a, data + b, args))
 			break;
 		do_swap(data + a, data + b, elem_size, swp, args);
 		a = b;
