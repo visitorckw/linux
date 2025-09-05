@@ -299,20 +299,41 @@ void __min_heap_sift_up_inline(min_heap_char *heap, size_t elem_size, size_t idx
 {
 	const unsigned long lsbit = elem_size & -elem_size;
 	void *data = heap->data;
+	void *tmp = data + heap->nr * elem_size;
 	void (*swp)(void *lhs, void *rhs, void *args) = func->swp;
 	/* pre-scale counters for performance */
 	size_t a = idx * elem_size, b;
 
+	if (!a)
+		return;
+
+	/* fast path: bubble down using scratch slot instead of swaps */
+	if (!swp && !__min_heap_full_inline(heap)) {
+		b = parent(a, lsbit, elem_size);
+		if (!func->less(data + a, data + b, args))
+			return;
+		memcpy(tmp, data + a, elem_size);
+		do {
+			memcpy(data + a, data + b, elem_size);
+			a = b;
+			if (!b)
+				break;
+			b = parent(a, lsbit, elem_size);
+		} while (!func->less(data + b, tmp, args));
+		memcpy(data + a, tmp, elem_size);
+		return;
+	}
+
 	if (!swp)
 		swp = select_swap_func(data, elem_size);
 
-	while (a) {
+	do {
 		b = parent(a, lsbit, elem_size);
 		if (!func->less(data + a, data + b, args))
 			break;
 		do_swap(data + a, data + b, elem_size, swp, args);
 		a = b;
-	}
+	} while(a);
 }
 
 #define min_heap_sift_up_inline(_heap, _idx, _func, _args)	\
